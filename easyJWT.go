@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"strconv"
 	"time"
@@ -56,6 +57,8 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	}
 	tok := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
 	if blank.Token != tok {
+		fmt.Println(tok)
+		fmt.Println(blank.Token)
 		return blank, false, false
 	}
 	if time.Now().After(blank.Expires) {

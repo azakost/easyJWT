@@ -1,4 +1,4 @@
-# easyJWT
+# easyWeb
 
 A light-weight JWT-manager written without any external dependencies except standard packages of Go. Package provides simple features for JSON Web Token creation and validation.
 
@@ -35,7 +35,7 @@ ReadJWT decrypts a given JSON Web Token and returns two validation booleans. Fir
 ### How to install
 
 ```bash
-go get "github.com/azakost/easyJWT"
+go get "github.com/azakost/easyWeb"
 
 ```
 
@@ -48,11 +48,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/azakost/easyJWT"
+	"github.com/azakost/easyWeb"
 )
 
 func main() {
-	var data easyJWT.JWT
+	var data easyWeb.JWT
 	data.User.Id = 123
 	data.User.Role = "admin"
 	data.Expires = time.Now().Add(time.Hour)

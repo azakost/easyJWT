@@ -14,7 +14,7 @@ import (
 
 // Default configurations
 var (
-	Secret       = "writedrunkeditsober"
+	Secret       = "bGl2ZWZhc3RkaWV5b3VuZw=="
 	TokenLife    = time.Hour
 	TokenRefresh = TokenLife / 2
 )

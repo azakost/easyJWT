@@ -4,8 +4,10 @@ package easyJWT
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/md5"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"io"
 	"strconv"
@@ -92,8 +94,13 @@ func decrypt(value string) ([]byte, error) {
 }
 
 func gcm() cipher.AEAD {
-	b64 := base64.StdEncoding.EncodeToString([]byte(Secret))
-	block, errorAes := aes.NewCipher([]byte(b64))
+	hasher := md5.New()
+	_, errorWrite := hasher.Write([]byte(Secret))
+	if errorWrite != nil {
+		panic(errorWrite)
+	}
+	hash := hex.EncodeToString(hasher.Sum(nil))
+	block, errorAes := aes.NewCipher([]byte(hash))
 	if errorAes != nil {
 		panic(errorAes)
 	}

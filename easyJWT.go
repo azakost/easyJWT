@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"strconv"
 	"time"
@@ -60,6 +61,10 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	if errorDecryptToken != nil {
 		return blank, false, false
 	}
+
+	fmt.Println(checkString)
+	fmt.Println()
+	fmt.Println(string(decrypted))
 
 	if string(decrypted) != checkString {
 		return blank, false, false

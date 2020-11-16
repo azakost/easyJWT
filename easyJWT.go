@@ -14,7 +14,7 @@ import (
 
 // Default configurations
 var (
-	Secret       = "bGl2ZWZhc3RkaWV5b3VuZw=="
+	Secret       = "writedrunkeditsober"
 	TokenLife    = time.Hour
 	TokenRefresh = TokenLife / 2
 )
@@ -92,7 +92,8 @@ func decrypt(value string) ([]byte, error) {
 }
 
 func gcm() cipher.AEAD {
-	block, errorAes := aes.NewCipher([]byte(Secret))
+	b64 := base64.StdEncoding.EncodeToString([]byte(Secret))
+	block, errorAes := aes.NewCipher([]byte(b64))
 	if errorAes != nil {
 		panic(errorAes)
 	}

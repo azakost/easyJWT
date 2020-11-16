@@ -12,10 +12,9 @@ import (
 // mismatch check boolean
 func ReadBody(r *http.Request, data interface{}) bool {
 	body, errorRead := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
 	err(errorRead)
-	errorUnmarshal := json.Unmarshal(body, &data)
-	err(errorUnmarshal)
+	defer r.Body.Close()
+	err(json.Unmarshal(body, &data))
 	regexWell := true
 	fieldVals := reflect.ValueOf(data).Elem()
 	fieldTags := reflect.TypeOf(data).Elem()

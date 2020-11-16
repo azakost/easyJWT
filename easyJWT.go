@@ -19,9 +19,8 @@ import (
 
 // Default configurations
 var (
-	Secret       = "writedrunkeditsober"
-	TokenLife    = time.Hour
-	TokenRefresh = TokenLife / 2
+	Secret       = "defaultpassphrase"
+	TokenRefresh = time.Hour
 )
 
 type JWT struct {
@@ -33,11 +32,11 @@ type JWT struct {
 	Token   string    `json:"token"`
 }
 
-// CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role // and then returns its an encrypted version as a string.
+// CreateJWT consumes an empty JWT struct with pre-filled User.Id, User.Role
+// & expiration time (Expires) and then returns its an encrypted version as a
+// string.
 func CreateJWT(data JWT) string {
-	exp := time.Now().Add(TokenLife)
-	data.Expires = exp
-	tok := []byte(strconv.FormatInt(data.User.Id, 10) + exp.String())
+	tok := []byte(strconv.FormatInt(data.User.Id, 10) + data.Expires.String())
 	data.Token = encrypt(tok)
 	marshaled, errorMarshal := json.Marshal(data)
 	if errorMarshal != nil {

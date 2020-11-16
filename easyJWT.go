@@ -9,7 +9,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io"
 	"strconv"
 	"time"
@@ -55,13 +54,14 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	if errorUnmarshal != nil {
 		return blank, false, false
 	}
-	tok := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
-	token := encrypt([]byte(tok))
-	if blank.Token != token {
-		fmt.Println("----- GENERATED TOKEN -------")
-		fmt.Println(token)
-		fmt.Println("----- TOKEN -------")
-		fmt.Println(blank.Token)
+	checkString := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
+
+	decrypted, errorDecryptToken := decrypt(blank.Token)
+	if errorDecryptToken != nil {
+		return blank, false, false
+	}
+
+	if string(decrypted) != checkString {
 		return blank, false, false
 	}
 	if time.Now().After(blank.Expires) {

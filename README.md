@@ -56,15 +56,14 @@ func main() {
 	data.User.Id = 123
 	data.User.Role = "admin"
 	data.Expires = time.Now().Add(time.Hour)
-    jwt := easyJWT.CreateJWT(data)
-    fmt.Println("Generated JSON web token:")
-    fmt.Println(jwt)
-    fmt.Println()
-    fmt.Println("JWT check:")
-    readedJWT, isValid, needToRefresh := easyJWT.ReadJWT(jwt)
-    fmt.Println(readedJWT)
-    fmt.Println("Is Valid: " + readedJWT)
-    fmt.Println("Need Refresh: " + needToRefresh)
+	jwt := easyJWT.CreateJWT(data)
+	fmt.Println("Generated JSON web token:\n---")
+	fmt.Println(jwt)
+	fmt.Println("---")
+	readedJWT, isValid, needToRefresh := easyJWT.ReadJWT(jwt)
+	fmt.Printf("%+v\n", readedJWT)
+	fmt.Printf("Is Valid: %v\n", isValid)
+	fmt.Printf("Need to refresh: %v\n", needToRefresh)
 }
 
 ```

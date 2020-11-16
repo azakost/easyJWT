@@ -6,14 +6,14 @@ A light-weight JWT-manager written without any external dependencies except stan
 
 Default configurations could be changed by redefining these variables.
 
-```golang
+```Go
 Secret       = "defaultpassphrase"
 TokenRefresh = time.Hour
 ```
 
 ### type JWT
 
-```golang
+```Go
 type JWT struct {
 	User struct {
 		Id   int64  `json:"id"`
@@ -31,3 +31,40 @@ CreateJWT consumes an empty JWT struct with pre-filled User.Id, User.Role & expi
 ### func ReadJWT(value string) (JWT, bool, bool)
 
 ReadJWT decrypts a given JSON Web Token and returns two validation booleans. First is for general validation, second is a signal for token refreshment.
+
+### How to install
+
+```bash
+go get "github.com/azakost/easyJWT"
+
+```
+
+### Example of usage
+
+```Go
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/azakost/easyJWT"
+)
+
+func main() {
+	var data easyJWT.JWT
+	data.User.Id = 123
+	data.User.Role = "admin"
+	data.Expires = time.Now().Add(time.Hour)
+    jwt := easyJWT.CreateJWT(data)
+    fmt.Println("Generated JSON web token:")
+    fmt.Println(jwt)
+    fmt.Println()
+    fmt.Println("JWT check:")
+    readedJWT, isValid, needToRefresh := easyJWT.ReadJWT(jwt)
+    fmt.Println(readedJWT)
+    fmt.Println("Is Valid: " + readedJWT)
+    fmt.Println("Need Refresh: " + needToRefresh)
+}
+
+```

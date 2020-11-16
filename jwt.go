@@ -39,9 +39,7 @@ func CreateJWT(data JWT) string {
 	tok := []byte(strconv.FormatInt(data.User.Id, 10) + data.Expires.String())
 	data.Token = encrypt(tok)
 	marshaled, errorMarshal := json.Marshal(data)
-	if errorMarshal != nil {
-		panic(errorMarshal)
-	}
+	err(errorMarshal)
 	return encrypt(marshaled)
 }
 
@@ -78,9 +76,7 @@ func encrypt(data []byte) string {
 	gcm := gcm()
 	nonce := make([]byte, gcm.NonceSize())
 	_, errorRead := io.ReadFull(rand.Reader, nonce)
-	if errorRead != nil {
-		panic(errorRead)
-	}
+	err(errorRead)
 	ciphertext := gcm.Seal(nonce, nonce, data, nil)
 	return base64.StdEncoding.EncodeToString([]byte(ciphertext))
 }
@@ -103,17 +99,11 @@ func decrypt(value string) ([]byte, error) {
 func gcm() cipher.AEAD {
 	hasher := md5.New()
 	_, errorWrite := hasher.Write([]byte(Secret))
-	if errorWrite != nil {
-		panic(errorWrite)
-	}
+	err(errorWrite)
 	hash := hex.EncodeToString(hasher.Sum(nil))
 	block, errorAes := aes.NewCipher([]byte(hash))
-	if errorAes != nil {
-		panic(errorAes)
-	}
+	err(errorAes)
 	gcm, errorGCM := cipher.NewGCM(block)
-	if errorGCM != nil {
-		panic(errorGCM)
-	}
+	err(errorGCM)
 	return gcm
 }

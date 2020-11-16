@@ -2,6 +2,15 @@
 
 A light-weight JWT-manager written without any external dependencies except standard packages of Go provides features for JSON Web Token creation and validation.
 
+### Default configurations
+
+Default configurations could be changed by redefining these variables.
+
+```golang
+Secret       = "defaultpassphrase"
+TokenRefresh = time.Hour
+```
+
 ### type JWT
 
 ```golang
@@ -17,7 +26,7 @@ type JWT struct {
 
 ### func CreateJWT(data JWT) string
 
-CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role // and then returns its an encrypted version as a string.
+CreateJWT consumes an empty JWT struct with pre-filled User.Id, User.Role & expiration time (Expires) and then returns its an encrypted version as a string.
 
 ### func ReadJWT(value string) (JWT, bool, bool)
 

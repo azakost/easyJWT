@@ -59,7 +59,7 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	token := encrypt([]byte(tok))
 	if blank.Token != token {
 		fmt.Println("----- GENERATED TOKEN -------")
-		fmt.Println(tok)
+		fmt.Println(token)
 		fmt.Println("----- TOKEN -------")
 		fmt.Println(blank.Token)
 		return blank, false, false

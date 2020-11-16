@@ -56,7 +56,8 @@ func ReadJWT(value string) (JWT, bool, bool) {
 		return blank, false, false
 	}
 	tok := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
-	if blank.Token != tok {
+	token := encrypt([]byte(tok))
+	if blank.Token != token {
 		fmt.Println("----- GENERATED TOKEN -------")
 		fmt.Println(tok)
 		fmt.Println("----- TOKEN -------")

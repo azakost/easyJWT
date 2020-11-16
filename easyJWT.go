@@ -11,7 +11,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io"
 	"strconv"
 	"strings"
@@ -38,7 +37,6 @@ type JWT struct {
 // and then returns its an encrypted version as a string.
 func CreateJWT(data JWT) string {
 	exp := time.Now().Add(TokenLife)
-	fmt.Println(exp)
 	data.Expires = exp
 	tok := []byte(strconv.FormatInt(data.User.Id, 10) + exp.String())
 	data.Token = encrypt(tok)

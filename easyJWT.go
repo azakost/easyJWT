@@ -1,4 +1,6 @@
-// Package for easy JSON Web Token create and read. Basic feature of this package that it is very light-weight and written without any dependencies except standard packages of golang.
+// Package for easy JSON Web Token create and read. Basic feature of this
+// package that it is very light-weight and written without any dependencies
+// except standard packages of golang.
 package easyJWT
 
 import (
@@ -12,6 +14,7 @@ import (
 	"fmt"
 	"io"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -31,9 +34,11 @@ type JWT struct {
 	Token   string    `json:"token"`
 }
 
-// CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role and then returns its an encrypted version as a string.
+// CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role
+// and then returns its an encrypted version as a string.
 func CreateJWT(data JWT) string {
 	exp := time.Now().Add(TokenLife)
+	fmt.Println(exp)
 	data.Expires = exp
 	tok := []byte(strconv.FormatInt(data.User.Id, 10) + exp.String())
 	data.Token = encrypt(tok)
@@ -44,7 +49,8 @@ func CreateJWT(data JWT) string {
 	return encrypt(marshaled)
 }
 
-// ReadJWT decrypts a given JSON Web Token and returns two validation booleans. First is for general validation, second is a signal for token refreshment.
+// ReadJWT decrypts a given JSON Web Token and returns two validation booleans.
+// First is for general validation, second is a signal for token refreshment.
 func ReadJWT(value string) (JWT, bool, bool) {
 	var blank JWT
 	data, errorDecrypt := decrypt(value)
@@ -56,18 +62,11 @@ func ReadJWT(value string) (JWT, bool, bool) {
 		return blank, false, false
 	}
 	checkString := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
-
 	decrypted, errorDecryptToken := decrypt(blank.Token)
 	if errorDecryptToken != nil {
 		return blank, false, false
 	}
-
-	fmt.Println(checkString)
-	fmt.Println()
-	fmt.Println(string(decrypted))
-	fmt.Println()
-
-	if string(decrypted) != checkString {
+	if strings.Split(string(decrypted), " m=")[0] != checkString {
 		return blank, false, false
 	}
 	if time.Now().After(blank.Expires) {

@@ -65,6 +65,7 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	fmt.Println(checkString)
 	fmt.Println()
 	fmt.Println(string(decrypted))
+	fmt.Println()
 
 	if string(decrypted) != checkString {
 		return blank, false, false

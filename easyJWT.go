@@ -1,6 +1,6 @@
-// Package for easy JSON Web Token create and read. Basic feature of this
-// package that it is very light-weight and written without any dependencies
-// except standard packages of golang.
+// A light-weight JWT-manager written without any external dependencies except
+// standard packages of Go provides features for JSON Web Token Creation and
+// validation.
 package easyJWT
 
 import (
@@ -33,8 +33,7 @@ type JWT struct {
 	Token   string    `json:"token"`
 }
 
-// CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role
-// and then returns its an encrypted version as a string.
+// CreateJWT consumes an empty JWT struct with pre-filled User.Id and User.Role // and then returns its an encrypted version as a string.
 func CreateJWT(data JWT) string {
 	exp := time.Now().Add(TokenLife)
 	data.Expires = exp

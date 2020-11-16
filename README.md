@@ -1,6 +1,6 @@
 # easyJWT
 
-A light-weight JWT-manager written without any external dependencies except standard packages of Go provides features for JSON Web Token creation and validation.
+A light-weight JWT-manager written without any external dependencies except standard packages of Go. Package provides simple features for JSON Web Token creation and validation.
 
 ### Default configurations
 

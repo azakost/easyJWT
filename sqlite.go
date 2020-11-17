@@ -89,9 +89,3 @@ func InDB(query string, data interface{}) bool {
 	}
 	return true
 }
-
-func err(e error) {
-	if e != nil {
-		panic(e)
-	}
-}

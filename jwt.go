@@ -37,17 +37,17 @@ type JWT struct {
 // string.
 func CreateJWT(data JWT) string {
 	tok := []byte(strconv.FormatInt(data.User.Id, 10) + data.Expires.String())
-	data.Token = encrypt(tok)
+	data.Token = Encrypt(tok)
 	marshaled, errorMarshal := json.Marshal(data)
 	err(errorMarshal)
-	return encrypt(marshaled)
+	return Encrypt(marshaled)
 }
 
 // ReadJWT decrypts a given JSON Web Token and returns two validation booleans.
 // First is for general validation, second is a signal for token refreshment.
 func ReadJWT(value string) (JWT, bool, bool) {
 	var blank JWT
-	data, errorDecrypt := decrypt(value)
+	data, errorDecrypt := Decrypt(value)
 	if errorDecrypt != nil {
 		return blank, false, false
 	}
@@ -56,7 +56,7 @@ func ReadJWT(value string) (JWT, bool, bool) {
 		return blank, false, false
 	}
 	checkString := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
-	decrypted, errorDecryptToken := decrypt(blank.Token)
+	decrypted, errorDecryptToken := Decrypt(blank.Token)
 	if errorDecryptToken != nil {
 		return blank, false, false
 	}
@@ -72,7 +72,7 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	return blank, true, false
 }
 
-func encrypt(data []byte) string {
+func Encrypt(data []byte) string {
 	gcm := gcm()
 	nonce := make([]byte, gcm.NonceSize())
 	_, errorRead := io.ReadFull(rand.Reader, nonce)
@@ -81,7 +81,7 @@ func encrypt(data []byte) string {
 	return base64.StdEncoding.EncodeToString([]byte(ciphertext))
 }
 
-func decrypt(value string) ([]byte, error) {
+func Decrypt(value string) ([]byte, error) {
 	data, errorBase64 := base64.StdEncoding.DecodeString(value)
 	if errorBase64 != nil {
 		return nil, errorBase64

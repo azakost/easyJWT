@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"time"
 )
 
 // ReadBody consumes request body, fills struct's fields and returns regex
@@ -36,6 +37,17 @@ func WriteAsJSON(w http.ResponseWriter, code int, d interface{}) {
 	err(jsonError)
 	_, writeError := w.Write(js)
 	err(writeError)
+}
+
+func PutCookie(w http.ResponseWriter, name, value string, exp time.Time) {
+	cookie := http.Cookie{
+		Name:     name,
+		Value:    value,
+		Expires:  exp,
+		HttpOnly: true,
+		Path:     "/",
+	}
+	http.SetCookie(w, &cookie)
 }
 
 func err(e error) {

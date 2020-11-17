@@ -30,6 +30,25 @@ func ReadBody(r *http.Request, data interface{}) bool {
 	return regexWell
 }
 
+func ReadParams(r *http.Request, data interface{}) bool {
+	regexWell := true
+	fieldVals := reflect.ValueOf(data).Elem()
+	fieldTags := reflect.TypeOf(data).Elem()
+	for i := 0; i < fieldVals.NumField(); i++ {
+		name := fieldTags.Field(i).Tag.Get("json")
+		if value, ok := r.URL.Query()[name]; ok {
+			regex := fieldTags.Field(i).Tag.Get("regex")
+			if !regexp.MustCompile(regex).MatchString(value[0]) {
+				regexWell = false
+				fieldVals.Field(i).SetString("regex!")
+			} else {
+				fieldVals.Field(i).SetString(value[0])
+			}
+		}
+	}
+	return regexWell
+}
+
 func WriteAsJSON(w http.ResponseWriter, code int, d interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(code)

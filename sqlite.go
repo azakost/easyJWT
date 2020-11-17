@@ -83,9 +83,15 @@ func InDB(query string, data interface{}) bool {
 	queryError := db.QueryRow(query, data).Scan(&data)
 	if queryError != nil {
 		if queryError != sql.ErrNoRows {
-			panic(err)
+			panic(queryError)
 		}
 		return false
 	}
 	return true
+}
+
+func err(e error) {
+	if e != nil {
+		panic(e)
+	}
 }

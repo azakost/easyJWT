@@ -24,7 +24,7 @@ func ReadBody(r *http.Request, data interface{}) bool {
 		regex := fieldTags.Field(i).Tag.Get("regex")
 		if !regexp.MustCompile(regex).MatchString(value) {
 			regexWell = false
-			fieldVals.Field(i).SetString("regex mismatch")
+			fieldVals.Field(i).SetString("regex!")
 		}
 	}
 	return regexWell
@@ -48,10 +48,4 @@ func PutCookie(w http.ResponseWriter, name, value string, exp time.Time) {
 		Path:     "/",
 	}
 	http.SetCookie(w, &cookie)
-}
-
-func err(e error) {
-	if e != nil {
-		panic(e)
-	}
 }

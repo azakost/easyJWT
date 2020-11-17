@@ -25,8 +25,10 @@ var (
 
 type JWT struct {
 	User struct {
-		Id   int64  `json:"id"`
-		Role string `json:"role"`
+		Uid      int64  `json:"uid"`
+		Username string `json:"username"`
+		Fullname string `json:"fullname"`
+		Role     string `json:"role"`
 	} `json:"user"`
 	Expires time.Time `json:"expires"`
 	Token   string    `json:"token"`
@@ -36,7 +38,7 @@ type JWT struct {
 // & expiration time (Expires) and then returns its an encrypted version as a
 // string.
 func CreateJWT(data JWT) string {
-	tok := []byte(strconv.FormatInt(data.User.Id, 10) + data.Expires.String())
+	tok := []byte(strconv.FormatInt(data.User.Uid, 10) + data.Expires.String())
 	data.Token = Encrypt(tok)
 	marshaled, errorMarshal := json.Marshal(data)
 	err(errorMarshal)
@@ -55,7 +57,7 @@ func ReadJWT(value string) (JWT, bool, bool) {
 	if errorUnmarshal != nil {
 		return blank, false, false
 	}
-	checkString := strconv.FormatInt(blank.User.Id, 10) + blank.Expires.String()
+	checkString := strconv.FormatInt(blank.User.Uid, 10) + blank.Expires.String()
 	decrypted, errorDecryptToken := Decrypt(blank.Token)
 	if errorDecryptToken != nil {
 		return blank, false, false

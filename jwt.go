@@ -24,14 +24,16 @@ var (
 )
 
 type JWT struct {
-	User struct {
-		Uid      int64  `json:"uid"`
-		Username string `json:"username"`
-		Fullname string `json:"fullname"`
-		Role     string `json:"role"`
-	} `json:"user"`
+	User    JWTUser   `json:"user"`
 	Expires time.Time `json:"expires"`
 	Token   string    `json:"token"`
+}
+
+type JWTUser struct {
+	Uid      int64  `json:"uid"`
+	Username string `json:"username"`
+	Fullname string `json:"fullname"`
+	Role     string `json:"role"`
 }
 
 // CreateJWT consumes an empty JWT struct with pre-filled User.Id, User.Role

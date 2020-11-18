@@ -42,7 +42,7 @@ func ReadParams(r *http.Request, data interface{}) bool {
 				num, errorParse := strconv.ParseInt(value[0], 10, 64)
 				if errorParse != nil {
 					typeWell = false
-					fieldVals.Field(i).SetString("type!")
+					fieldVals.Field(i).SetInt(0)
 				} else {
 					fieldVals.Field(i).SetInt(num)
 				}

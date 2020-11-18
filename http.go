@@ -38,11 +38,11 @@ func ReadParams(r *http.Request, data interface{}) bool {
 	for i := 0; i < fieldVals.NumField(); i++ {
 		name := fieldTags.Field(i).Tag.Get("json")
 		if value, ok := r.URL.Query()[name]; ok {
-			// if number - format to int64
-			if reflect.TypeOf(data).Field(i).Type.Kind() == reflect.Int64 {
+			if fieldVals.Field(i).Kind() == reflect.Int64 {
 				num, errorParse := strconv.ParseInt(value[0], 10, 64)
 				if errorParse != nil {
 					typeWell = false
+					fieldVals.Field(i).SetString("type!")
 				} else {
 					fieldVals.Field(i).SetInt(num)
 				}

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -31,22 +32,26 @@ func ReadBody(r *http.Request, data interface{}) bool {
 }
 
 func ReadParams(r *http.Request, data interface{}) bool {
-	regexWell := true
+	typeWell := true
 	fieldVals := reflect.ValueOf(data).Elem()
 	fieldTags := reflect.TypeOf(data).Elem()
 	for i := 0; i < fieldVals.NumField(); i++ {
 		name := fieldTags.Field(i).Tag.Get("json")
 		if value, ok := r.URL.Query()[name]; ok {
-			regex := fieldTags.Field(i).Tag.Get("regex")
-			if !regexp.MustCompile(regex).MatchString(value[0]) {
-				regexWell = false
-				fieldVals.Field(i).SetString("regex!")
+			// if number - format to int64
+			if reflect.TypeOf(data).Field(i).Type.Kind() == reflect.Int64 {
+				num, errorParse := strconv.ParseInt(value[0], 10, 64)
+				if errorParse != nil {
+					typeWell = false
+				} else {
+					fieldVals.Field(i).SetInt(num)
+				}
 			} else {
 				fieldVals.Field(i).SetString(value[0])
 			}
 		}
 	}
-	return regexWell
+	return typeWell
 }
 
 func WriteAsJSON(w http.ResponseWriter, code int, d interface{}) {

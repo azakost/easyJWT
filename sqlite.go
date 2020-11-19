@@ -32,7 +32,7 @@ func CreateDB(sqlpath string) {
 	}
 }
 
-func Insert(query string, args ...interface{}) error {
+func Exe(query string, args ...interface{}) {
 	db, errorOpen := sql.Open("sqlite3", DBname)
 	err(errorOpen)
 	defer db.Close()
@@ -41,10 +41,9 @@ func Insert(query string, args ...interface{}) error {
 	_, errorExec := tx.Exec(query, args...)
 	if errorExec != nil {
 		err(tx.Rollback())
-		return errorExec
+		panic(errorExec)
 	}
 	err(tx.Commit())
-	return nil
 }
 
 func Select(model interface{}, query string, args ...interface{}) {

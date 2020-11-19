@@ -16,7 +16,9 @@ func ReadBody(r *http.Request, data interface{}) bool {
 	body, errorRead := ioutil.ReadAll(r.Body)
 	err(errorRead)
 	defer r.Body.Close()
-	err(json.Unmarshal(body, &data))
+	if json.Unmarshal(body, &data) != nil {
+		return false
+	}
 	regexWell := true
 	fieldVals := reflect.ValueOf(data).Elem()
 	fieldTags := reflect.TypeOf(data).Elem()

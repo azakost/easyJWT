@@ -15,8 +15,5 @@ func SetContext(r *http.Request, data ctxData) *http.Request {
 }
 
 func Ctx(r *http.Request) ctxData {
-	if v := r.Context().Value("data"); v != nil {
-		return v
-	}
-	return nil
+	return r.Context().Value("data")
 }

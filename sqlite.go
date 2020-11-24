@@ -23,7 +23,6 @@ func CreateDB(sqlpath string) {
 	if !fileExists(DBname) {
 		query, errorRead := ioutil.ReadFile(sqlpath)
 		err(errorRead)
-
 		db, errorOpen := sql.Open("sqlite3", DBname)
 		err(errorOpen)
 		defer db.Close()
@@ -32,19 +31,21 @@ func CreateDB(sqlpath string) {
 	}
 }
 
-func Exe(query string, args ...interface{}) error {
+func Exe(query string, args ...interface{}) (int64, error) {
 	db, errorOpen := sql.Open("sqlite3", DBname)
 	err(errorOpen)
 	defer db.Close()
 	tx, errorBegin := db.Begin()
 	err(errorBegin)
-	_, errorExec := tx.Exec(query, args...)
+	res, errorExec := tx.Exec(query, args...)
 	if errorExec != nil {
 		err(tx.Rollback())
-		return errorExec
+		return 0, errorExec
 	}
 	err(tx.Commit())
-	return nil
+	id, errorLastInsertId := res.LastInsertId()
+	err(errorLastInsertId)
+	return id, nil
 }
 
 func Select(model interface{}, query string, args ...interface{}) {

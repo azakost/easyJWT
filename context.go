@@ -6,14 +6,15 @@ import (
 )
 
 type ctxKey string
+type ctxData interface{}
 
-func SetContext(r *http.Request, data interface{}) *http.Request {
+func SetContext(r *http.Request, data ctxData) *http.Request {
 	var key ctxKey = "data"
 	ctx := context.WithValue(r.Context(), key, data)
 	return r.WithContext(ctx)
 }
 
-func Ctx(r *http.Request) interface{} {
+func Ctx(r *http.Request) ctxData {
 	if v := r.Context().Value("data"); v != nil {
 		return v
 	}
